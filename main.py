@@ -106,7 +106,7 @@ def evenLuhnSum(evenintnums: int):
         #
         # It seems cursed, but it _does_ work, so who cares.
         
-        if (doublednum > 10):
+        if (doublednum > 9):
             doublednum -= 9;
 
         sum += doublednum;
