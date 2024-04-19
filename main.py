@@ -4,7 +4,7 @@
 
 # More packages may be imported in the space below if approved by your instructor
 
-informaation: str = ""
+information: str = ""
 
 def printMenu():
     print('''
@@ -24,6 +24,7 @@ def printMenu():
     This function may also be broken down further depending on your algorithm/approach
 '''
 def enterCustomerInfo():
+    # brian decided to declare types.
     firstname: str = "";
     lastname: str = "";
     city: str = "";
@@ -38,10 +39,10 @@ def enterCustomerInfo():
     # calls validate postal code to check if that postal code is in the loop
     while not validatePostalCode(postalcode):
         postalcode = input("Postal Code:\n").upper()
-
-    while not validateCreditCard(creditcard):
+    # calls validate credit card to check if the card is valid
+    while not validateCreditCard():
         ccnum = input("Card:\n") # TO DO: ADD CREDIT CARD CHECK
-    
+    # returns to set global infomation
     return f"{firstname}|{lastname}|{city}|{postalcode}|{creditcard}"
 
 '''
@@ -59,10 +60,13 @@ def validatePostalCode(code: str):
             line = f.readline()
             # loops through everything
             while line:
+                # reads current line and splits
                 line = f.readline().split("|")
+                # checks the postal code
                 if line[0] == code:
                     return True
                 elif line == [""]:
+                    # returns false if end of the list is reached (marked by an empty string in list)
                     return False
                 
 
@@ -73,34 +77,16 @@ def validatePostalCode(code: str):
     This function may also be broken down further depending on your algorithm/approach
 '''
 
-# TODO: Test everything.
-
-def evenLuhnSum(evenintnums: int):
+def evenLuhnCalc(luhnnums: int):
     doublednum: int = 0;
     sum: int;
     i: int;
 
-    for i in range(len(evenintnums)):
-        doublednum = evenintnums[i] * 2;
-        
-        # A little bit of an explanation on how the following two lines of code work:
-        # The interesting thing about the Luhn algorithm is that, assuming that you
-        # are only working with numbers from 1-9, you will always get a range of numbers
-        # that is less than 20.
-        #
-        # One other interesting thing to note about the Luhn algorithm is that, for as
-        # long as that holds true, when one goes about summing all of the digits in one's
-        # number, it will always be equal to double the original number minus 9.
-        #
-        # To be completely honest, I do not know why this holds true mathematically as I
-        # only ever managed to find this interesting quirk when looking at the examples
-        # of the algorithm working on Google Classroom, noticing that there existed a
-        # consistent pattern when one summed the digits of every number that was greater
-        # than 9.
-        #
-        # It seems cursed, but it _does_ work, so who cares.
+    for i in range(len(luhnnums)):
+        doublednum = luhnnums[i] * 2;
         
         if (doublednum > 10):
+            # since 2(num1) + 2(num2) == 2(num) - 9 we can just subtract 9
             doublednum -= 9;
 
         sum += doublednum;
@@ -110,26 +96,24 @@ def evenLuhnSum(evenintnums: int):
 
 def validateCreditCard(creditcard: str):
     validlen: int = 9;
-    evenintnums: int = [];
-    sum: int = 0;
+    luhnnums: int = [];
+    sum1: int = 0;
+    sum2: int = 0;
     i: int;
     
-    if (len(creditcard) ==  validlen and creditcard.isnumeric):
+    if (len() ==  validlen and creditcard.isnumeric):
         creditcard = creditcard.reversed();
         
         for i in range(validlen):
             if (i % 2):
-                evenintnums += [int(creditcard[i])]
+                sum1 += int(creditcard[i]);
             else:
-                sum += int(creditcard[i]);
+                luhnnums += [int(creditcard[i])];
         
-        sum += evenLuhnSum(evenintnums);
+        evenLuhnCalc(luhnnums);
+        
 
-    # Return 0 if the final Luhn sum is not fully divisible by 10 (i.e. after dividing by
-    # 10, there exists a remainder) to indicate that the given credit card number was invalid
-    # Else, return 1 to indicate that the given credit card number was valid.
-    return 0 if (sum % 10) else 1;
-
+    return;
 
 '''
     This function is to be edited to achieve the task.
@@ -138,12 +122,6 @@ def validateCreditCard(creditcard: str):
     This function may also be broken down further depending on your algorithm/approach
 '''
 def generateCustomerDataFile(data):
-    # CON, PRN, AUX, NUL 
-    # COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9
-    # LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, LPT9
-    
-    # does not contain
-    # * " / \ < > : | ?
     
     # writes data to fileOutput ... \fileName.csv
     # ex: c:\users\john\desktop\jane.csv
@@ -157,6 +135,12 @@ def generateCustomerDataFile(data):
         f.write(data)
 
 def validateCustomerDataFile(fileName, fileOutput):
+    # checks if file contains invalid characters (windows only)
+    # TO DO: ADD MACOS FORBIDDEN FILES
+    # TO DO: CHECK IF FILE LOCATIONS EXIST
+    # TO DO: CHECK IF FILE NAME IS VALID
+    # TO DO: CHECK IF DRIVE IS VALID
+
     characters = "*\"/\\<>:|?"
     for i in characters:
         if i in fileName:
