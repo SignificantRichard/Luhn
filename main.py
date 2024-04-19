@@ -4,6 +4,8 @@
 
 # More packages may be imported in the space below if approved by your instructor
 
+informaation: str = ""
+
 def printMenu():
     print('''
           Customer and Sales System\n
@@ -22,7 +24,25 @@ def printMenu():
     This function may also be broken down further depending on your algorithm/approach
 '''
 def enterCustomerInfo():
-    pass    # Remove this pass statement and add your own code below
+    firstname: str = "";
+    lastname: str = "";
+    city: str = "";
+    postalcode: str = "";
+    creditcard: str = "";
+
+    # enter in user information
+    firstname = input("First Name:\n")
+    lastname = input("Last Name:\n")
+    city = input("City:\n")
+    
+    # calls validate postal code to check if that postal code is in the loop
+    while not validatePostalCode(postalcode):
+        postalcode = input("Postal Code:\n").upper()
+
+    while not validateCreditCard():
+        ccnum = input("Card:\n") # TO DO: ADD CREDIT CARD CHECK
+    
+    return f"{firstname}|{lastname}|{city}|{postalcode}|{creditcard}"
 
 '''
     This function is to be edited to achieve the task.
@@ -30,8 +50,21 @@ def enterCustomerInfo():
     You may place as many or as few parameters as needed
     This function may also be broken down further depending on your algorithm/approach
 '''
-def validatePostalCode():
-    pass    # Remove this pass statement and add your own code below
+def validatePostalCode(code: str):
+    # check length of postal code first. Less expensive if we get this before looping through everything
+    if len(code) >= 3:
+        # reads the file
+        with open("postal_codes.csv","r") as f:
+            # since the first line is just a title, we can just ignore this line
+            line = f.readline()
+            # loops through everything
+            while line:
+                line = f.readline().split("|")
+                if line[0] == code:
+                    return True
+                elif line == [""]:
+                    return False
+                
 
 '''
     This function is to be edited to achieve the task.
@@ -39,8 +72,43 @@ def validatePostalCode():
     You may place as many or as few parameters as needed
     This function may also be broken down further depending on your algorithm/approach
 '''
-def validateCreditCard():
-    pass    # Remove this pass statement and add your own code below
+
+def evenLuhnCalc(luhnnums: int):
+    doublednum: int = 0;
+    sum: int;
+    i: int;
+
+    for i in range(len(luhnnums)):
+        doublednum = luhnnums[i] * 2;
+        
+        if (doublednum > 10):
+            doublednum -= 9;
+
+        sum += doublednum;
+
+    return sum;
+
+
+def validateCreditCard(creditcard: str):
+    validlen: int = 9;
+    luhnnums: int = [];
+    sum1: int = 0;
+    sum2: int = 0;
+    i: int;
+    
+    if (len() ==  validlen and creditcard.isnumeric):
+        creditcard = creditcard.reversed();
+        
+        for i in range(validlen):
+            if (i % 2):
+                sum1 += int(creditcard[i]);
+            else:
+                luhnnums += [int(creditcard[i])];
+        
+        evenLuhnCalc(luhnnums);
+        
+
+    return;
 
 '''
     This function is to be edited to achieve the task.
@@ -48,8 +116,37 @@ def validateCreditCard():
     You may place as many or as few parameters as needed
     This function may also be broken down further depending on your algorithm/approach
 '''
-def generateCustomerDataFile():
-    pass    # Remove this pass statement and add your own code below
+def generateCustomerDataFile(data):
+    # CON, PRN, AUX, NUL 
+    # COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9
+    # LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, LPT9
+    
+    # does not contain
+    # * " / \ < > : | ?
+    
+    # writes data to fileOutput ... \fileName.csv
+    # ex: c:\users\john\desktop\jane.csv
+    fileOutput: str = ""
+    fileName: str = ""
+
+    fileOutput = input("Output location\nEx: c:\\users\\john\\desktop\\\n")
+    fileName = input("File Name:\n")
+    
+    with open(fileOutput + fileName + ".csv", "w") as f:
+        f.write(data)
+
+def validateCustomerDataFile(fileName, fileOutput):
+    characters = "*\"/\\<>:|?"
+    for i in characters:
+        if i in fileName:
+            return False
+    ["CON", "PRN", "AUX", "NUL" ,
+    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]
+
+    # check if the file name is the above and return false if true
+
+    return True # as the final line for validation
 
 ####################################################################
 #       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         #
@@ -79,11 +176,11 @@ while userInput != exitCondition:
     if userInput == enterCustomerOption:
         # Only the line below may be editted based on the parameter list and how you design the method return
         # Any necessary variables may be added to this if section, but nowhere else in the code
-        enterCustomerInfo()
+        information = enterCustomerInfo()
 
     elif userInput == generateCustomerOption: 
         # Only the line below may be editted based on the parameter list and how you design the method return
-        generateCustomerDataFile()
+        generateCustomerDataFile(information)
 
     else:
         print("Please type in a valid option (A number from 1-9)")
