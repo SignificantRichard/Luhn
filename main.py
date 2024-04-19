@@ -4,7 +4,7 @@
 
 # More packages may be imported in the space below if approved by your instructor
 
-informaation: str = ""
+information: str = ""
 
 def printMenu():
     print('''
@@ -24,6 +24,7 @@ def printMenu():
     This function may also be broken down further depending on your algorithm/approach
 '''
 def enterCustomerInfo():
+    # brian decided to declare types.
     firstname: str = "";
     lastname: str = "";
     city: str = "";
@@ -38,10 +39,10 @@ def enterCustomerInfo():
     # calls validate postal code to check if that postal code is in the loop
     while not validatePostalCode(postalcode):
         postalcode = input("Postal Code:\n").upper()
-
+    # calls validate credit card to check if the card is valid
     while not validateCreditCard():
         ccnum = input("Card:\n") # TO DO: ADD CREDIT CARD CHECK
-    
+    # returns to set global infomation
     return f"{firstname}|{lastname}|{city}|{postalcode}|{creditcard}"
 
 '''
@@ -59,10 +60,13 @@ def validatePostalCode(code: str):
             line = f.readline()
             # loops through everything
             while line:
+                # reads current line and splits
                 line = f.readline().split("|")
+                # checks the postal code
                 if line[0] == code:
                     return True
                 elif line == [""]:
+                    # returns false if end of the list is reached (marked by an empty string in list)
                     return False
                 
 
@@ -82,6 +86,7 @@ def evenLuhnCalc(luhnnums: int):
         doublednum = luhnnums[i] * 2;
         
         if (doublednum > 10):
+            # since 2(num1) + 2(num2) == 2(num) - 9 we can just subtract 9
             doublednum -= 9;
 
         sum += doublednum;
@@ -117,12 +122,6 @@ def validateCreditCard(creditcard: str):
     This function may also be broken down further depending on your algorithm/approach
 '''
 def generateCustomerDataFile(data):
-    # CON, PRN, AUX, NUL 
-    # COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9
-    # LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, LPT9
-    
-    # does not contain
-    # * " / \ < > : | ?
     
     # writes data to fileOutput ... \fileName.csv
     # ex: c:\users\john\desktop\jane.csv
@@ -136,6 +135,12 @@ def generateCustomerDataFile(data):
         f.write(data)
 
 def validateCustomerDataFile(fileName, fileOutput):
+    # checks if file contains invalid characters (windows only)
+    # TO DO: ADD MACOS FORBIDDEN FILES
+    # TO DO: CHECK IF FILE LOCATIONS EXIST
+    # TO DO: CHECK IF FILE NAME IS VALID
+    # TO DO: CHECK IF DRIVE IS VALID
+
     characters = "*\"/\\<>:|?"
     for i in characters:
         if i in fileName:
