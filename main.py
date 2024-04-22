@@ -44,8 +44,8 @@ def enterCustomerInfo():
         postalcode = input("Postal Code:\n").upper()
 
     # calls validate credit card to check if the card is valid
-    while not validateCreditCard(creditcard):
-        creditcard = input("Card:\n") # TO DO: ADD CREDIT CARD CHECK
+    while len(creditcard) < 1 or validateCreditCard(creditcard):
+        creditcard = input("Card:\n") # TODO: ADD CREDIT CARD CHECK
     
     input("Press enter to continue") # allows users to mentally seperate menus
 
@@ -90,13 +90,15 @@ def validatePostalCode(code: str):
 # TODO: Test everything.
 
 def validateCreditCard(creditcard: str):
-    validlen: int = 9;
+    validlen: int = 11; # test cases have 11 nums. Changing it to test the script -wxg
     evenintnums: int = [];
     sum: int = 0;
     i: int;
     
     if (len(creditcard) ==  validlen and creditcard.isnumeric):
-        creditcard = creditcard.reversed();
+        # hate how reversed isnt a function but __reversed__ is and that reversed list is a seperate class from list
+        # anyways it just turns it into a list, then reversed list, then list, then joins back to a string
+        creditcard = "".join(list(list(creditcard).__reversed__()));
         
         for i in range(validlen):
             if (i % 2):
@@ -106,10 +108,10 @@ def validateCreditCard(creditcard: str):
         
         sum += evenLuhnSum(evenintnums);
 
-    # Return 0 if the final Luhn sum is not fully divisible by 10 (i.e. after dividing by
+    # Return False if the final Luhn sum is not fully divisible by 10 (i.e. after dividing by
     # 10, there exists a remainder) to indicate that the given credit card number was invalid
-    # Else, return 1 to indicate that the given credit card number was valid.
-    return 0 if (sum % 10) else 1;
+    # Else, return True to indicate that the given credit card number was valid.
+    return sum % 10 == 0 # evalutates expression then resolves into bool -wxg
 
 
 '''
@@ -147,36 +149,9 @@ def generateCustomerDataFile(data):
 
 # I needed to move this so we don't get docked
 
-def validateCity(name: str):
-    '''Checks city in csv'''
-    with open("postal_codes.csv","r") as f:
-        for data in f.readlines():
-            if data.split("|")[1].lower() == name:
-                return True
-    return False
-
-def validateCustomerDataFile(fileName, fileOutput):
-    # checks if file contains invalid characters (windows only)
-    # TODO: ADD MACOS FORBIDDEN FILES
-    # TODO: CHECK IF FILE LOCATIONS EXIST
-    # TODO: CHECK IF FILE NAME IS VALID
-    # TODO: CHECK IF DRIVE IS VALID
-
-    characters = "*\"/\\<>:|?"
-    for i in characters:
-        if i in fileName:
-            return False
-    forbiddenValues = ["CON", "PRN", "AUX", "NUL" ,
-    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]
-
-    # check if the file name is the above and return false if true
-
-    return True # as the final line for validation
-
 def evenLuhnSum(evenintnums: int):
     doublednum: int = 0;
-    sum: int;
+    sum: int; # bug seems to be originating from here. No default value set. TODO: fix this
     i: int;
 
     for i in range(len(evenintnums)):
@@ -205,6 +180,33 @@ def evenLuhnSum(evenintnums: int):
         sum += doublednum;
 
     return sum;
+
+def validateCity(name: str):
+    '''Checks city in csv'''
+    with open("postal_codes.csv","r") as f:
+        for data in f.readlines():
+            if data.split("|")[1].lower() == name:
+                return True
+    return False
+
+def validateCustomerDataFile(fileName, fileOutput):
+    # checks if file contains invalid characters (windows only)
+    # TODO: ADD MACOS FORBIDDEN FILES
+    # TODO: CHECK IF FILE LOCATIONS EXIST
+    # TODO: CHECK IF FILE NAME IS VALID
+    # TODO: CHECK IF DRIVE IS VALID
+
+    characters = "*\"/\\<>:|?"
+    for i in characters:
+        if i in fileName:
+            return False
+    forbiddenValues = ["CON", "PRN", "AUX", "NUL" ,
+    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]
+
+    # check if the file name is the above and return false if true
+
+    return True # as the final line for validation
 
 ####################################################################
 #                            MAIN PROGRAM                          #
