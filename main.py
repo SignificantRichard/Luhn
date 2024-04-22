@@ -44,7 +44,7 @@ def enterCustomerInfo():
         postalcode = input("Postal Code:\n").upper()
 
     # calls validate credit card to check if the card is valid
-    while len(creditcard) < 1 or validateCreditCard(creditcard):
+    while len(creditcard) < 1 or not validateCreditCard(creditcard):
         creditcard = input("Card:\n") # TODO: ADD CREDIT CARD CHECK
     
     input("Press enter to continue") # allows users to mentally seperate menus
@@ -90,22 +90,21 @@ def validatePostalCode(code: str):
 # TODO: Test everything.
 
 def validateCreditCard(creditcard: str):
-    validlen: int = 11; # test cases have 11 nums. Changing it to test the script -wxg
+    validlen: int = 9; # test cases have 11 nums. Changing it to test the script -wxg
     evenintnums: int = [];
     sum: int = 0;
     i: int;
     
-    if (len(creditcard) ==  validlen and creditcard.isnumeric):
+    if (len(creditcard) >=  validlen and creditcard.isnumeric):
         # hate how reversed isnt a function but __reversed__ is and that reversed list is a seperate class from list
         # anyways it just turns it into a list, then reversed list, then list, then joins back to a string
         creditcard = "".join(list(list(creditcard).__reversed__()));
         
-        for i in range(validlen):
-            if (i % 2):
+        for i in range(len(creditcard)):
+            if (i % 2) == 1:
                 evenintnums += [int(creditcard[i])]
             else:
                 sum += int(creditcard[i]);
-        
         sum += evenLuhnSum(evenintnums);
 
     # Return False if the final Luhn sum is not fully divisible by 10 (i.e. after dividing by
@@ -113,7 +112,13 @@ def validateCreditCard(creditcard: str):
     # Else, return True to indicate that the given credit card number was valid.
     return sum % 10 == 0 # evalutates expression then resolves into bool -wxg
 
-
+def validateCity(name: str):
+    '''Checks city in csv'''
+    with open("postal_codes.csv","r") as f:
+        for data in f.readlines():
+            if data.split("|")[1].lower() == name:
+                return True
+    return False
 '''
     This function is to be edited to achieve the task.
     It is your decision to make this function a procedural or functional type
@@ -151,9 +156,9 @@ def generateCustomerDataFile(data):
 
 def evenLuhnSum(evenintnums: int):
     doublednum: int = 0;
-    sum: int; # bug seems to be originating from here. No default value set. TODO: fix this
+    sum: int = 0;
     i: int;
-
+    
     for i in range(len(evenintnums)):
         doublednum = evenintnums[i] * 2;
         
@@ -178,16 +183,7 @@ def evenLuhnSum(evenintnums: int):
             doublednum -= 9;
 
         sum += doublednum;
-
     return sum;
-
-def validateCity(name: str):
-    '''Checks city in csv'''
-    with open("postal_codes.csv","r") as f:
-        for data in f.readlines():
-            if data.split("|")[1].lower() == name:
-                return True
-    return False
 
 def validateCustomerDataFile(fileName, fileOutput):
     # checks if file contains invalid characters (windows only)
