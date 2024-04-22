@@ -34,7 +34,9 @@ def enterCustomerInfo():
     # enter in user information
     firstname = input("First Name:\n")
     lastname = input("Last Name:\n")
-    city = input("City:\n")
+    # we can add this if we want
+    # while not validateCity(city):
+    city = input("City:\n").lower()
     
     # calls validate postal code to check if that postal code is in the loop
     while not validatePostalCode(postalcode):
@@ -44,6 +46,8 @@ def enterCustomerInfo():
     while not validateCreditCard(creditcard):
         creditcard = input("Card:\n") # TO DO: ADD CREDIT CARD CHECK
     
+    input("Press enter to continue") # allows users to mentally seperate menus
+
     # returns to set global infomation
     return f"{firstname}|{lastname}|{city}|{postalcode}|{creditcard}"
 
@@ -53,6 +57,7 @@ def enterCustomerInfo():
     You may place as many or as few parameters as needed
     This function may also be broken down further depending on your algorithm/approach
 '''
+
 def validatePostalCode(code: str):
     # check length of postal code first. Less expensive if we get this before looping through everything
     if len(code) >= 3:
@@ -66,9 +71,11 @@ def validatePostalCode(code: str):
                 line = f.readline().split("|")
                 # checks the postal code
                 if line[0] == code:
+                    print("Postal code is valid")
                     return True
                 elif line == [""]:
                     # returns false if end of the list is reached (marked by an empty string in list)
+                    print(f"Postal code \"{code}\" is invalid")
                     return False
                 
 
@@ -80,39 +87,6 @@ def validatePostalCode(code: str):
 '''
 
 # TODO: Test everything.
-
-def evenLuhnSum(evenintnums: int):
-    doublednum: int = 0;
-    sum: int;
-    i: int;
-
-    for i in range(len(evenintnums)):
-        doublednum = evenintnums[i] * 2;
-        
-        # A little bit of an explanation on how the following two lines of code work:
-        # The interesting thing about the Luhn algorithm is that, assuming that you
-        # are only working with numbers from 1-9, you will always get a range of numbers
-        # that is less than 20.
-        #
-        # One other interesting thing to note about the Luhn algorithm is that, for as
-        # long as that holds true, when one goes about summing all of the digits in one's
-        # number, it will always be equal to double the original number minus 9.
-        #
-        # To be completely honest, I do not know why this holds true mathematically as I
-        # only ever managed to find this interesting quirk when looking at the examples
-        # of the algorithm working on Google Classroom, noticing that there existed a
-        # consistent pattern when one summed the digits of every number that was greater
-        # than 9.
-        #
-        # It seems cursed, but it _does_ work, so who cares.
-        
-        if (doublednum > 9):
-            doublednum -= 9;
-
-        sum += doublednum;
-
-    return sum;
-
 
 def validateCreditCard(creditcard: str):
     validlen: int = 9;
@@ -150,11 +124,27 @@ def generateCustomerDataFile(data):
     fileOutput: str = ""
     fileName: str = ""
 
-    fileOutput = input("Output location\nEx: c:\\users\\john\\desktop\\\n")
+    fileOutput = input("Output location\nEx: c:\\users\\john\\desktop\n")
     fileName = input("File Name:\n")
     
-    with open(fileOutput + fileName + ".csv", "w") as f:
+    with open(fileOutput + "\\" + fileName + ".csv", "w") as f:
         f.write(data)
+        print(f"File saved as {fileOutput}\\{fileName}.csv")
+        input("Press enter to continue")
+
+####################################################################
+#       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         #
+####################################################################
+
+# I needed to move this so we don't get docked
+
+def validateCity(name: str):
+    '''Checks city in csv'''
+    with open("postal_codes.csv","r") as f:
+        for data in f.readlines():
+            if data.split("|")[1].lower() == name:
+                return True
+    return False
 
 def validateCustomerDataFile(fileName, fileOutput):
     # checks if file contains invalid characters (windows only)
@@ -167,7 +157,7 @@ def validateCustomerDataFile(fileName, fileOutput):
     for i in characters:
         if i in fileName:
             return False
-    ["CON", "PRN", "AUX", "NUL" ,
+    forbiddenValues = ["CON", "PRN", "AUX", "NUL" ,
     "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
     "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]
 
@@ -175,12 +165,37 @@ def validateCustomerDataFile(fileName, fileOutput):
 
     return True # as the final line for validation
 
-####################################################################
-#       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         #
-####################################################################
+def evenLuhnSum(evenintnums: int):
+    doublednum: int = 0;
+    sum: int;
+    i: int;
 
+    for i in range(len(evenintnums)):
+        doublednum = evenintnums[i] * 2;
+        
+        # A little bit of an explanation on how the following two lines of code work:
+        # The interesting thing about the Luhn algorithm is that, assuming that you
+        # are only working with numbers from 1-9, you will always get a range of numbers
+        # that is less than 20.
+        #
+        # One other interesting thing to note about the Luhn algorithm is that, for as
+        # long as that holds true, when one goes about summing all of the digits in one's
+        # number, it will always be equal to double the original number minus 9.
+        #
+        # To be completely honest, I do not know why this holds true mathematically as I
+        # only ever managed to find this interesting quirk when looking at the examples
+        # of the algorithm working on Google Classroom, noticing that there existed a
+        # consistent pattern when one summed the digits of every number that was greater
+        # than 9.
+        #
+        # It seems cursed, but it _does_ work, so who cares.
+        
+        if (doublednum > 9):
+            doublednum -= 9;
 
+        sum += doublednum;
 
+    return sum;
 
 ####################################################################
 #                            MAIN PROGRAM                          #
