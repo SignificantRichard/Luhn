@@ -3,6 +3,7 @@
 # created yourself
 
 # More packages may be imported in the space below if approved by your instructor
+import os
 
 information: str = ""
 
@@ -24,7 +25,7 @@ def printMenu():
     This function may also be broken down further depending on your algorithm/approach
 '''
 def enterCustomerInfo():
-    # brian decided to declare types.
+    # brian decided to declare types. also provides default blank values
     firstname: str = "";
     lastname: str = "";
     city: str = "";
@@ -118,19 +119,27 @@ def validateCreditCard(creditcard: str):
     This function may also be broken down further depending on your algorithm/approach
 '''
 def generateCustomerDataFile(data):
-    
     # writes data to fileOutput ... \fileName.csv
     # ex: c:\users\john\desktop\jane.csv
     fileOutput: str = ""
     fileName: str = ""
 
-    fileOutput = input("Output location\nEx: c:\\users\\john\\desktop\n")
+    # sees if the path provided exists
+    while not os.path.isdir(fileOutput):
+        fileOutput = input("Output location\nEx: c:\\users\\john\\desktop\n\"default\" for current directory\n")
+        if fileOutput.lower() == "default":
+            # finds the current directory where the python file is located
+            fileOutput = os.path.dirname(os.path.abspath(__file__))
+            break
+    
+    # while not validateCustomerDataFile():
     fileName = input("File Name:\n")
     
     with open(fileOutput + "\\" + fileName + ".csv", "w") as f:
+        # writes costumer data
         f.write(data)
         print(f"File saved as {fileOutput}\\{fileName}.csv")
-        input("Press enter to continue")
+    input("Press enter to continue")
 
 ####################################################################
 #       ADDITIONAL METHODS MAY BE ADDED BELOW IF NECESSARY         #
@@ -148,10 +157,10 @@ def validateCity(name: str):
 
 def validateCustomerDataFile(fileName, fileOutput):
     # checks if file contains invalid characters (windows only)
-    # TO DO: ADD MACOS FORBIDDEN FILES
-    # TO DO: CHECK IF FILE LOCATIONS EXIST
-    # TO DO: CHECK IF FILE NAME IS VALID
-    # TO DO: CHECK IF DRIVE IS VALID
+    # TODO: ADD MACOS FORBIDDEN FILES
+    # TODO: CHECK IF FILE LOCATIONS EXIST
+    # TODO: CHECK IF FILE NAME IS VALID
+    # TODO: CHECK IF DRIVE IS VALID
 
     characters = "*\"/\\<>:|?"
     for i in characters:
