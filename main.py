@@ -25,6 +25,7 @@ def printMenu():
     This function may also be broken down further depending on your algorithm/approach
 '''
 def enterCustomerInfo():
+    '''Entering the customer information. Writes to str: information'''
     # brian decided to declare types. also provides default blank values
     firstname: str = "";
     lastname: str = "";
@@ -36,16 +37,17 @@ def enterCustomerInfo():
     firstname = input("First Name:\n")
     lastname = input("Last Name:\n")
     # we can add this if we want
-    # while not validateCity(city):
-    city = input("City:\n").lower()
+    while not validateCity(city) and city != "&":
+        city = input("City:\n").lower()
     
     # calls validate postal code to check if that postal code is in the loop
-    while not validatePostalCode(postalcode):
-        postalcode = input("Postal Code:\n").upper()
+    while not validatePostalCode(postalcode) and postalcode != "&":
+        postalcode = input("Postal Code\nIf you want to exit, input \"&\".\n(Input the first three characters of the postal code):\n").upper()
+        
 
     # calls validate credit card to check if the card is valid
-    while len(creditcard) < 1 or not validateCreditCard(creditcard):
-        creditcard = input("Card:\n") # TODO: ADD CREDIT CARD CHECK
+    while len(creditcard) < 1 or not validateCreditCard(creditcard) and creditcard != "&":
+        creditcard = input("Card: (If you want to exit, input \"&\")\n") # TODO: ADD CREDIT CARD CHECK
     
     input("Press enter to continue") # allows users to mentally seperate menus
 
@@ -60,25 +62,21 @@ def enterCustomerInfo():
 '''
 
 def validatePostalCode(code: str):
+    '''Validates the postal code. Must be 3 characters exactly'''
     # check length of postal code first. Less expensive if we get this before looping through everything
-    if len(code) >= 3:
-        # reads the file
-        with open("postal_codes.csv","r") as f:
-            # since the first line is just a title, we can just ignore this line
-            line = f.readline()
-            # loops through everything
-            while line:
-                # reads current line and splits
-                line = f.readline().split("|")
-                # checks the postal code
-                if line[0] == code:
-                    print("Postal code is valid")
-                    return True
-                elif line == [""]:
-                    # returns false if end of the list is reached (marked by an empty string in list)
-                    print(f"Postal code \"{code}\" is invalid")
-                    return False
-                
+    if code != "&":
+        if len(code) == 3:
+            # reads the file
+            with open("postal_codes.csv","r") as f:
+                data = f.readlines()
+                for postalCode in data:
+                    postalCode = postalCode.split("|")[0]
+                    if postalCode == code:
+                        return True
+                print(f"Postal code \"{code}\" is invalid")
+        elif code != "":
+            print("Invalid. You have to input three characters.")
+        return False
 
 '''
     This function is to be edited to achieve the task.
@@ -90,34 +88,43 @@ def validatePostalCode(code: str):
 # TODO: Test everything.
 
 def validateCreditCard(creditcard: str):
-    validlen: int = 9; # test cases have 11 nums. Changing it to test the script -wxg
-    evenintnums: int = [];
-    sum: int = 0;
-    i: int;
-    
-    if (len(creditcard) >=  validlen and creditcard.isnumeric):
-        # hate how reversed isnt a function but __reversed__ is and that reversed list is a seperate class from list
-        # anyways it just turns it into a list, then reversed list, then list, then joins back to a string
-        creditcard = "".join(list(list(creditcard).__reversed__()));
+    '''Checks credic card (even numbers pushed to "evenLuhnSum()")'''
+    if creditcard != "&":
+        minlen: int = 9; # test cases have 11 nums. Changing it to test the script -wxg
+        maxlen: int = 19;
+        evenintnums: int = [];
+        sum: int = 0;
+        i: int;
         
-        for i in range(len(creditcard)):
-            if (i % 2) == 1:
-                evenintnums += [int(creditcard[i])]
-            else:
-                sum += int(creditcard[i]);
-        sum += evenLuhnSum(evenintnums);
+        if (maxlen >= len(creditcard) >=  minlen and creditcard.isnumeric()):
+            # hate how reversed isnt a function but __reversed__ is and that reversed list is a seperate class from list
+            # anyways it just turns it into a list, then reversed list, then list, then joins back to a string
+            creditcard = "".join(list(list(creditcard).__reversed__()));
+            
+            for i in range(len(creditcard)):
+                if (i % 2) == 1:
+                    evenintnums += [int(creditcard[i])]
+                else:
+                    sum += int(creditcard[i]);
+            sum += evenLuhnSum(evenintnums);
 
-    # Return False if the final Luhn sum is not fully divisible by 10 (i.e. after dividing by
-    # 10, there exists a remainder) to indicate that the given credit card number was invalid
-    # Else, return True to indicate that the given credit card number was valid.
-    return sum % 10 == 0 # evalutates expression then resolves into bool -wxg
+        # Return False if the final Luhn sum is not fully divisible by 10 (i.e. after dividing by
+        # 10, there exists a remainder) to indicate that the given credit card number was invalid
+        # Else, return True to indicate that the given credit card number was valid.
+        if (sum % 10 == 0): # evalutates expression then resolves into bool -wxg
+            return True
+        else:
+            print("Invalid credit card number.")
+            return False
 
 def validateCity(name: str):
-    '''Checks city in csv'''
-    with open("postal_codes.csv","r") as f:
-        for data in f.readlines():
-            if data.split("|")[1].lower() == name:
-                return True
+    '''Checks city in postal_codes.csv file'''
+    if name != "&":
+        with open("postal_codes.csv","r") as f:
+            for data in f.readlines():
+                if data.split("|")[1].lower() == name:
+                    return True
+    print("Invalid city name")
     return False
 '''
     This function is to be edited to achieve the task.
@@ -185,9 +192,9 @@ def evenLuhnSum(evenintnums: int):
         sum += doublednum;
     return sum;
 
-def validateCustomerDataFile(fileName, fileOutput):
+def validateCustomerDataFile(fileName):
     # checks if file contains invalid characters (windows only)
-    # TODO: ADD MACOS FORBIDDEN FILES
+    # TODO: ADD MACOS FORBIDDEN FILES(IT W)
     # TODO: CHECK IF FILE LOCATIONS EXIST
     # TODO: CHECK IF FILE NAME IS VALID
     # TODO: CHECK IF DRIVE IS VALID
@@ -201,6 +208,9 @@ def validateCustomerDataFile(fileName, fileOutput):
     "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]
 
     # check if the file name is the above and return false if true
+    for i in forbiddenValues:
+        if i == fileName:
+            return False
 
     return True # as the final line for validation
 
