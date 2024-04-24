@@ -38,7 +38,7 @@ def enterCustomerInfo():
     lastname = input("Last Name:\n")
     # we can add this if we want
     while not validateCity(city) and city != "&":
-        city = input("City:\n").lower()
+        city = input("City: Input \"&\" to continue\n").lower()
     
     # calls validate postal code to check if that postal code is in the loop
     while not validatePostalCode(postalcode) and postalcode != "&":
@@ -72,11 +72,13 @@ def validatePostalCode(code: str):
                 for postalCode in data:
                     postalCode = postalCode.split("|")[0]
                     if postalCode == code:
+                        # returns true if found
                         return True
                 print(f"Postal code \"{code}\" is invalid")
         elif code != "":
             print("Invalid. You have to input three characters.")
-        return False
+    # returns false if either not found or read file breaks
+    return False
 
 '''
     This function is to be edited to achieve the task.
@@ -99,7 +101,7 @@ def validateCreditCard(creditcard: str):
         if (maxlen >= len(creditcard) >=  minlen and creditcard.isnumeric()):
             # hate how reversed isnt a function but __reversed__ is and that reversed list is a seperate class from list
             # anyways it just turns it into a list, then reversed list, then list, then joins back to a string
-            creditcard = "".join(list(list(creditcard).__reversed__()));
+            creditcard = "".join(list(creditcard).__reversed__());
             
             for i in range(len(creditcard)):
                 if (i % 2) == 1:
@@ -119,12 +121,12 @@ def validateCreditCard(creditcard: str):
 
 def validateCity(name: str):
     '''Checks city in postal_codes.csv file'''
-    if name != "&":
+    if name != "&" and name != "":
         with open("postal_codes.csv","r") as f:
             for data in f.readlines():
                 if data.split("|")[1].lower() == name:
                     return True
-    print("Invalid city name")
+            print("Invalid city name")
     return False
 '''
     This function is to be edited to achieve the task.
