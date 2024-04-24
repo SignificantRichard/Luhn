@@ -135,8 +135,8 @@ def validateCity(name: str):
     This function may also be broken down further depending on your algorithm/approach
 '''
 def generateCustomerDataFile(data):
-    # writes data to fileOutput ... \fileName.csv
-    # ex: c:\users\john\desktop\jane.csv
+    '''writes data to fileOutput ... \ fileName.csv
+    ex: c:\users\john\desktop\jane.csv'''
     fileOutput: str = ""
     fileName: str = ""
 
@@ -164,6 +164,7 @@ def generateCustomerDataFile(data):
 # I needed to move this so we don't get docked
 
 def evenLuhnSum(evenintnums: int):
+    '''Calculates even num sum and returns it'''
     doublednum: int = 0;
     sum: int = 0;
     i: int;
@@ -195,7 +196,7 @@ def evenLuhnSum(evenintnums: int):
     return sum;
 
 def validateCustomerDataFile(fileName):
-    # checks if file contains invalid characters (windows only)
+    '''checks if file contains invalid characters (windows only)'''
     # TODO: ADD MACOS FORBIDDEN FILES(IT W)
     # TODO: CHECK IF FILE LOCATIONS EXIST
     # TODO: CHECK IF FILE NAME IS VALID
