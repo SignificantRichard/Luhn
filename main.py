@@ -40,15 +40,23 @@ def enterCustomerInfo():
     while not validateCity(city) and city != "&":
         city = input("City: Input \"&\" to continue\n").lower()
     
+    if city == "&":
+        city = ""
+
     # calls validate postal code to check if that postal code is in the loop
     while not validatePostalCode(postalcode) and postalcode != "&":
         postalcode = input("Postal Code\nIf you want to exit, input \"&\".\n(Input the first three characters of the postal code):\n").upper()
-        
+    
+    if postalcode == "&":
+        postalcode = ""
 
     # calls validate credit card to check if the card is valid
     while len(creditcard) < 1 or not validateCreditCard(creditcard) and creditcard != "&":
         creditcard = input("Card: (If you want to exit, input \"&\")\n") # TODO: ADD CREDIT CARD CHECK
     
+    if creditcard == "&":
+        creditcard = ""
+
     input("Press enter to continue") # allows users to mentally seperate menus
 
     # returns to set global infomation
@@ -139,6 +147,7 @@ def generateCustomerDataFile(data):
     # ex: c:\users\john\desktop\jane.csv
     fileOutput: str = ""
     fileName: str = ""
+    lastID: int = 1
 
     # sees if the path provided exists
     while not os.path.isdir(fileOutput):
@@ -155,11 +164,13 @@ def generateCustomerDataFile(data):
             pass # just passes onto the except statement if does exist
         with open(fileOutput + "\\" + fileName + ".csv", "w") as f:
             # writes costumer data
-            f.write(data)
+            f.write(f"{1}|{data}")
     except FileExistsError:
+        with open(fileOutput + "\\" + fileName + ".csv", "r") as f:
+            lastID = len(f.readlines())
         with open(fileOutput + "\\" + fileName + ".csv", "a") as f:
             # writes costumer data
-            f.write("\n" + data)
+            f.write("\n" + f"{lastID+1}|{data}")
             print(f"File saved as {fileOutput}\\{fileName}.csv")
     input("Press enter to continue")
 
