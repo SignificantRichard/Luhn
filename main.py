@@ -135,8 +135,8 @@ def validateCity(name: str):
     This function may also be broken down further depending on your algorithm/approach
 '''
 def generateCustomerDataFile(data):
-    '''writes data to fileOutput ... \ fileName.csv
-    ex: c:\users\john\desktop\jane.csv'''
+    # writes data to fileOutput ... \fileName.csv
+    # ex: c:\users\john\desktop\jane.csv
     fileOutput: str = ""
     fileName: str = ""
 
@@ -148,13 +148,19 @@ def generateCustomerDataFile(data):
             fileOutput = os.path.dirname(os.path.abspath(__file__))
             break
     
-    # while not validateCustomerDataFile():
-    fileName = input("File Name:\n")
-    
-    with open(fileOutput + "\\" + fileName + ".csv", "w") as f:
-        # writes costumer data
-        f.write(data)
-        print(f"File saved as {fileOutput}\\{fileName}.csv")
+    while not validateCustomerDataFile(fileName):
+        fileName = input("File Name:\n")
+    try:
+        with open(fileOutput + "\\" + fileName + ".csv", "x") as f:
+            pass # just passes onto the except statement if does exist
+        with open(fileOutput + "\\" + fileName + ".csv", "w") as f:
+            # writes costumer data
+            f.write(data)
+    except FileExistsError:
+        with open(fileOutput + "\\" + fileName + ".csv", "a") as f:
+            # writes costumer data
+            f.write("\n" + data)
+            print(f"File saved as {fileOutput}\\{fileName}.csv")
     input("Press enter to continue")
 
 ####################################################################
@@ -164,7 +170,6 @@ def generateCustomerDataFile(data):
 # I needed to move this so we don't get docked
 
 def evenLuhnSum(evenintnums: int):
-    '''Calculates even num sum and returns it'''
     doublednum: int = 0;
     sum: int = 0;
     i: int;
@@ -196,26 +201,26 @@ def evenLuhnSum(evenintnums: int):
     return sum;
 
 def validateCustomerDataFile(fileName):
-    '''checks if file contains invalid characters (windows only)'''
+    # checks if file contains invalid characters (windows only)
     # TODO: ADD MACOS FORBIDDEN FILES(IT W)
     # TODO: CHECK IF FILE LOCATIONS EXIST
     # TODO: CHECK IF FILE NAME IS VALID
     # TODO: CHECK IF DRIVE IS VALID
 
+    if fileName == "":
+        return False
+
     characters = "*\"/\\<>:|?"
     for i in characters:
         if i in fileName:
             return False
+        
     forbiddenValues = ["CON", "PRN", "AUX", "NUL" ,
     "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
     "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]
 
     # check if the file name is the above and return false if true
-    for i in forbiddenValues:
-        if i == fileName:
-            return False
-
-    return True # as the final line for validation
+    return not fileName in forbiddenValues
 
 ####################################################################
 #                            MAIN PROGRAM                          #
