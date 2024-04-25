@@ -34,11 +34,11 @@ def enterCustomerInfo():
     creditcard: str = "";
 
     # enter in user information
-    firstname = input("First Name:\n")
-    lastname = input("Last Name:\n")
+    firstname = input("First Name:\n").title()
+    lastname = input("Last Name:\n").title()
     # we can add this if we want
     while not validateCity(city) and city != "&":
-        city = input("City: Input \"&\" to continue\n").lower()
+        city = input("City: Input \"&\" to continue\n").title()
     
     if city == "&":
         city = ""
@@ -132,7 +132,7 @@ def validateCity(name: str):
     if name != "&" and name != "":
         with open("postal_codes.csv","r") as f:
             for data in f.readlines():
-                if data.split("|")[1].lower() == name:
+                if data.split("|")[1].title() == name:
                     return True
             print("Invalid city name")
     return False
@@ -161,13 +161,19 @@ def generateCustomerDataFile(data):
         fileName = input("File Name:\n")
     try:
         with open(fileOutput + "\\" + fileName + ".csv", "x") as f:
-            pass # just passes onto the except statement if does exist
+            print("File exists at index 1") # because it just got made
         with open(fileOutput + "\\" + fileName + ".csv", "w") as f:
             # writes costumer data
-            f.write(f"{1}|{data}")
+            f.write(f"1|{data}")
     except FileExistsError:
         with open(fileOutput + "\\" + fileName + ".csv", "r") as f:
-            lastID = len(f.readlines())
+            lines = f.readlines()
+            lastID = len(lines)
+            for i,v in enumerate(lines):
+                if v[2:].strip() == information:
+                    print(f"File exists at index {i + 1}")
+                    input("Press enter to continue")
+                    return # break function
         with open(fileOutput + "\\" + fileName + ".csv", "a") as f:
             # writes costumer data
             f.write("\n" + f"{lastID+1}|{data}")
