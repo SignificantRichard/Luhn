@@ -129,7 +129,7 @@ def validateCreditCard(creditcard: str):
 
 def validateCity(name: str):
     '''Checks city in postal_codes.csv file'''
-    if name != "&" and name != "":
+    if name != "&" and len(name) >= 3:
         with open("postal_codes.csv","r") as f:
             for data in f.readlines():
                 if data.split("|")[1].title() == name:
