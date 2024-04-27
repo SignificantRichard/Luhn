@@ -18,12 +18,6 @@ def printMenu():
           Enter menu option (1-9)
           ''')
 
-'''
-    This function is to be edited to achieve the task.
-    It is your decision to make this function a procedural or functional type
-    You may place as many or as few parameters as needed
-    This function may also be broken down further depending on your algorithm/approach
-'''
 def enterCustomerInfo():
     '''Entering the customer information. Writes to str: information'''
     # brian decided to declare types. also provides default blank values
@@ -62,13 +56,6 @@ def enterCustomerInfo():
     # returns to set global infomation
     return f"{firstname}|{lastname}|{city}|{postalcode}|{creditcard}"
 
-'''
-    This function is to be edited to achieve the task.
-    It is your decision to make this function a procedural or functional type
-    You may place as many or as few parameters as needed
-    This function may also be broken down further depending on your algorithm/approach
-'''
-
 def validatePostalCode(code: str):
     '''Validates the postal code. Must be 3 characters exactly'''
     # check length of postal code first. Less expensive if we get this before looping through everything
@@ -88,17 +75,10 @@ def validatePostalCode(code: str):
     # returns false if either not found or read file breaks
     return False
 
-'''
-    This function is to be edited to achieve the task.
-    It is your decision to make this function a procedural or functional type
-    You may place as many or as few parameters as needed
-    This function may also be broken down further depending on your algorithm/approach
-'''
-
 # TODO: Test everything.
 
 def validateCreditCard(creditcard: str):
-    '''Checks credic card (even numbers pushed to "evenLuhnSum()")'''
+    '''Checks credid card (even numbers pushed to "evenLuhnSum()")'''
     if creditcard != "&":
         minlen: int = 9; # test cases have 11 nums. Changing it to test the script -wxg
         maxlen: int = 19;
@@ -127,23 +107,8 @@ def validateCreditCard(creditcard: str):
             print("Invalid credit card number.")
             return False
 
-def validateCity(name: str):
-    '''Checks city in postal_codes.csv file'''
-    if name != "&" and len(name) >= 3:
-        with open("postal_codes.csv","r") as f:
-            for data in f.readlines():
-                if data.split("|")[1].title() == name:
-                    return True
-            print("Invalid city name")
-    return False
-'''
-    This function is to be edited to achieve the task.
-    It is your decision to make this function a procedural or functional type
-    You may place as many or as few parameters as needed
-    This function may also be broken down further depending on your algorithm/approach
-'''
 def generateCustomerDataFile(data):
-    # writes data to fileOutput ... \fileName.csv
+    '''writes data to fileOutput ... \fileName.csv'''
     # ex: c:\users\john\desktop\jane.csv
     fileOutput: str = ""
     fileName: str = ""
@@ -157,9 +122,10 @@ def generateCustomerDataFile(data):
             fileOutput = os.path.dirname(os.path.abspath(__file__))
             break
     
-    while not validateCustomerDataFile(fileName):
+    while not validateCustomerDataFile(fileName): # checks forbidden file
         fileName = input("File Name:\n")
     try:
+        # goes to except if error
         with open(fileOutput + "\\" + fileName + ".csv", "x") as f:
             print("File exists at index 1") # because it just got made
         with open(fileOutput + "\\" + fileName + ".csv", "w") as f:
@@ -187,6 +153,7 @@ def generateCustomerDataFile(data):
 # I needed to move this so we don't get docked
 
 def evenLuhnSum(evenintnums: int):
+    '''Returns the sum of the even indexes'''
     doublednum: int = 0;
     sum: int = 0;
     i: int;
@@ -217,7 +184,18 @@ def evenLuhnSum(evenintnums: int):
         sum += doublednum;
     return sum;
 
+def validateCity(name: str):
+    '''Checks city in postal_codes.csv file'''
+    if name != "&" and len(name) >= 3:
+        with open("postal_codes.csv","r") as f:
+            for data in f.readlines():
+                if data.split("|")[1].title() == name:
+                    return True
+            print("Invalid city name")
+    return False
+
 def validateCustomerDataFile(fileName):
+    '''Checks for forbidden file names'''
     # checks if file contains invalid characters (windows only)
     # TODO: ADD MACOS FORBIDDEN FILES(IT W)
     # TODO: CHECK IF FILE LOCATIONS EXIST
