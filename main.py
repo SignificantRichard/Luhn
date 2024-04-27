@@ -26,6 +26,7 @@ def enterCustomerInfo():
     city: str = "";
     postalcode: str = "";
     creditcard: str = "";
+    validccnum: bool = False;
 
     # enter in user information
     firstname = input("First Name:\n").title()
@@ -45,8 +46,11 @@ def enterCustomerInfo():
         postalcode = ""
 
     # calls validate credit card to check if the card is valid
-    while len(creditcard) < 1 or not validateCreditCard(creditcard) and creditcard != "&":
-        creditcard = input("Card: (If you want to exit, input \"&\")\n") # TODO: ADD CREDIT CARD CHECK
+    while len(creditcard) < 1 or not validccnum and creditcard != "&":
+        creditcard = input("Card: (If you want to exit, input \"&\")\n");
+        validccnum = validateCreditCard(creditcard);
+        if (not validccnum):
+            print("Invalid credit card number.");
     
     if creditcard == "&":
         creditcard = ""
@@ -78,7 +82,7 @@ def validatePostalCode(code: str):
 # TODO: Test everything.
 
 def validateCreditCard(creditcard: str):
-    '''Checks credid card (even numbers pushed to "evenLuhnSum()")'''
+    '''Checks credit card (even numbers pushed to "evenLuhnSum()")'''
     if creditcard != "&":
         minlen: int = 9; # test cases have 11 nums. Changing it to test the script -wxg
         maxlen: int = 19;
@@ -98,14 +102,16 @@ def validateCreditCard(creditcard: str):
                     sum += int(creditcard[i]);
             sum += evenLuhnSum(evenintnums);
 
+        else:
+            return False;
+
         # Return False if the final Luhn sum is not fully divisible by 10 (i.e. after dividing by
         # 10, there exists a remainder) to indicate that the given credit card number was invalid
         # Else, return True to indicate that the given credit card number was valid.
         if (sum % 10 == 0): # evalutates expression then resolves into bool -wxg
-            return True
+            return True;
         else:
-            print("Invalid credit card number.")
-            return False
+            return False;
 
 def generateCustomerDataFile(data):
     '''writes data to fileOutput ... \fileName.csv'''
@@ -249,3 +255,4 @@ while userInput != exitCondition:
 
 #Exits once the user types 
 print("Program Terminated")
+
