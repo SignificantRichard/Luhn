@@ -32,11 +32,7 @@ def enterCustomerInfo():
     firstname = input("First Name:\n").title()
     lastname = input("Last Name:\n").title()
     # we can add this if we want
-    while not validateCity(city) and city != "&":
-        city = input("City: Input \"&\" to continue\n").title()
-    
-    if city == "&":
-        city = ""
+    city = input("City: ").title()
 
     # calls validate postal code to check if that postal code is in the loop
     while not validatePostalCode(postalcode) and postalcode != "&":
@@ -121,15 +117,18 @@ def generateCustomerDataFile(data):
     lastID: int = 1
 
     # sees if the path provided exists
-    while not os.path.isdir(fileOutput):
-        fileOutput = input("Output location\nEx: c:\\users\\john\\desktop\n\"default\" for current directory\n")
-        if fileOutput.lower() == "default":
-            # finds the current directory where the python file is located
-            fileOutput = os.path.dirname(os.path.abspath(__file__))
-            break
+    # while not os.path.isdir(fileOutput):
+    #     fileOutput = input("Output location\nEx: c:\\users\\john\\desktop\n\"default\" for current directory\n")
+    #     if fileOutput.lower() == "default":
+    #         # finds the current directory where the python file is located
+
+    fileOutput = os.path.dirname(os.path.abspath(__file__))
     
-    while not validateCustomerDataFile(fileName): # checks forbidden file
+            # break
+    
+    while not validateCustomerDataFile(fileName): # checks forbidden file name
         fileName = input("File Name:\n")
+        
     try:
         # goes to except if error
         with open(fileOutput + "\\" + fileName + ".csv", "x") as f:
@@ -189,16 +188,6 @@ def evenLuhnSum(evenintnums: int):
 
         sum += doublednum;
     return sum;
-
-def validateCity(name: str):
-    '''Checks city in postal_codes.csv file'''
-    if name != "&" and len(name) >= 3:
-        with open("postal_codes.csv","r") as f:
-            for data in f.readlines():
-                if data.split("|")[1].title() == name:
-                    return True
-            print("Invalid city name")
-    return False
 
 def validateCustomerDataFile(fileName):
     '''Checks for forbidden file names'''
